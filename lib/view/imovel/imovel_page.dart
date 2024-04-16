@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:trabalho_imobiliaria/components/buttons/custom_salvar_cadastro_button_component.dart';
+import 'package:trabalho_imobiliaria/controller/tela_imovel/tela_imovel_controller.dart';
 import 'package:trabalho_imobiliaria/model/imovel_model.dart';
 import 'package:trabalho_imobiliaria/themes/themes.dart';
+import 'package:trabalho_imobiliaria/widgets/custom_text_form_field_widget.dart';
 
 class ImovelPage extends StatefulWidget {
 
@@ -15,6 +18,10 @@ class ImovelPage extends StatefulWidget {
 }
 
 class ImovelPageState extends State<ImovelPage> {
+  final TelaImovelController _telaImovelController =
+      TelaImovelController();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +56,39 @@ class ImovelPageState extends State<ImovelPage> {
         ),
         body: TabBarView(
           children: [
-            Container(
-              child: Center(
-                child: Text('Conteúdo da aba Ações'),
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20),
+                      CustomTextFormFieldWidget(
+                        label: 'Anotação',
+                        hintText: 'Informar uma anotação',
+                        onChanged: _telaImovelController.setDescricao,  
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Campo Obrigatório';
+                          }
+                          return null;
+                        },            
+                      ),
+                      SizedBox(height: 20),          
+                      CustomSalvarCadastroButtonComponent(
+                        buttonText: 'Salvar Anotação',
+                        onPressed: () {    
+                          if (_formKey.currentState!.validate()) {
+                            _telaImovelController
+                                .create(context);
+                          }                           
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             SingleChildScrollView(

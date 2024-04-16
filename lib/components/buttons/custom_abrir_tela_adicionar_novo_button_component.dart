@@ -15,7 +15,7 @@ class CustomAbrirTelaAdicionarNovoButtonComponent extends StatelessWidget {
         elevation: 5,    
         minimumSize: Size(MediaQuery.of(context).size.width, 50),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5), // Ajuste o valor conforme necessário
+          borderRadius: BorderRadius.circular(5),
         ),
       ),
       onPressed: onPressed, 

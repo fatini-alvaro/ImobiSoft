@@ -38,7 +38,7 @@ class CustomImovelCard extends StatelessWidget {
                 top: 20,
                 left: 10,
                 child: Container(
-                  width: 150, // Ajuste este valor conforme necessário
+                  width: 150,
                   height: 40,
                   child: Text(
                     'Nº - ${imovel.numero}',
@@ -54,7 +54,7 @@ class CustomImovelCard extends StatelessWidget {
                 top: 60,
                 left: 10,
                 child: Container(
-                  width: 150, // Ajuste este valor conforme necessário
+                  width: 150,
                   height: 80,
                   child: Text(
                     '${imovel.cidade}, ${imovel.rua}',
