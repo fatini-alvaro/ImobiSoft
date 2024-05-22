@@ -36,10 +36,10 @@ class ImovelModel {
 
   factory ImovelModel.fromJson(Map<String, dynamic> json) {
     return ImovelModel(
-      id: json['id'],
-      numero: json['numero'],
-      rua: json['rua'],
-      cidade: json['cidade'],
+      id: json['ID'],
+      numero: json['NUMERO'],
+      rua: json['RUA'],
+      cidade: json['CIDADE'],
     );
   }
 }

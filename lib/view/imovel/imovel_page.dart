@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trabalho_imobiliaria/components/buttons/custom_salvar_cadastro_button_component.dart';
 import 'package:trabalho_imobiliaria/controller/tela_imovel/tela_imovel_controller.dart';
+import 'package:trabalho_imobiliaria/dao/imovel_dao.dart';
+import 'package:trabalho_imobiliaria/model/anotacao_model.dart';
 import 'package:trabalho_imobiliaria/model/imovel_model.dart';
 import 'package:trabalho_imobiliaria/themes/themes.dart';
 import 'package:trabalho_imobiliaria/widgets/custom_text_form_field_widget.dart';
@@ -22,6 +24,25 @@ class ImovelPageState extends State<ImovelPage> {
       TelaImovelController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  List<AnotacaoModel> anotacoes = [];
+  final _daoImovel = ImovelDao();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAnotacoes();
+  }
+
+  String _descricao = '';
+
+  Future<void> _loadAnotacoes() async {
+    List<AnotacaoModel> loadedAnotacoes = await _daoImovel.listaAnotacoes(widget.imovel!.id!);
+    setState(() {
+      anotacoes = loadedAnotacoes;
+    });
+    _descricao = '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +89,13 @@ class ImovelPageState extends State<ImovelPage> {
                       CustomTextFormFieldWidget(
                         label: 'Anotação',
                         hintText: 'Informar uma anotação',
-                        onChanged: _telaImovelController.setDescricao,  
+                        initialValue: _descricao,
+                        onChanged: (value) {
+                          setState(() {
+                            _descricao = value;
+                          });
+                          _telaImovelController.setDescricao(value);
+                        },  
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Campo Obrigatório';
@@ -79,13 +106,46 @@ class ImovelPageState extends State<ImovelPage> {
                       SizedBox(height: 20),          
                       CustomSalvarCadastroButtonComponent(
                         buttonText: 'Salvar Anotação',
-                        onPressed: () {    
+                        onPressed: () async {    
                           if (_formKey.currentState!.validate()) {
-                            _telaImovelController
-                                .create(context);
+                            await _telaImovelController
+                                .create(context, widget.imovel!.id!);
+
+                            setState(() {
+                              _descricao = '';
+                            });
+                            _telaImovelController.setDescricao('');
+
+                            _loadAnotacoes();
                           }                           
                         },
                       ),
+                      SizedBox(height: 20),
+                      Text(
+                        'Anotações Salvas:',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      if (anotacoes.isEmpty)
+                        Text('Nenhuma anotação salva.')
+                      else
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: anotacoes.length,
+                          itemBuilder: (context, index) {
+                            final anotacao = anotacoes[index];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Card(
+                                child: ListTile(
+                                  title: Text(anotacao.descricao?.isEmpty ?? true ? 'Sem descrição' : anotacao.descricao!),
+                                  // Adicione outros campos da anotação, se necessário
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                     ],
                   ),
                 ),

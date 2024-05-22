@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:trabalho_imobiliaria/dao/imovel_dao.dart';
 import 'package:trabalho_imobiliaria/model/imovel_model.dart';
 import 'package:trabalho_imobiliaria/services/prefs_service.dart';
 import 'package:trabalho_imobiliaria/utils/dialogs.dart';
@@ -19,6 +20,8 @@ class CadastrarImovelController with ChangeNotifier {
   setRua(String value) => _rua = value;
   String? get rua => _rua;
 
+  final _dao = ImovelDao();
+
   Future<bool> create(BuildContext context) async {
 
     Dialogs.showLoading(context, message:'Aguarde, Criando Imóvel');
@@ -27,7 +30,8 @@ class CadastrarImovelController with ChangeNotifier {
       
       ImovelModel imovel = ImovelModel(numero: _numero, rua: _cidade, cidade: _rua);
       
-      await PrefsService.saveImovel(imovel);
+      //await PrefsService.saveImovel(imovel);
+      await _dao.salvar(imovel);
 
       Dialogs.hideLoading(context);
       Dialogs.successToast(context, 'Imóvel criado com sucesso');

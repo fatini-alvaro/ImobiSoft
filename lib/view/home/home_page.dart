@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trabalho_imobiliaria/components/buttons/custom_abrir_tela_adicionar_novo_button_component.dart';
 import 'package:trabalho_imobiliaria/components/cards/custom_imovel_card.dart';
 import 'package:trabalho_imobiliaria/controller/selecionar_imovel/selecionar_imovel_controller.dart';
+import 'package:trabalho_imobiliaria/dao/imovel_dao.dart';
 import 'package:trabalho_imobiliaria/model/imovel_model.dart';
 import 'package:trabalho_imobiliaria/services/prefs_service.dart';
 import 'package:trabalho_imobiliaria/utils/dialogs.dart';
@@ -21,6 +22,7 @@ class HomePageState extends State<HomePage> {
   final SelecionarImovelController _imovelController = SelecionarImovelController();
 
   List<ImovelModel> imoveis = [];
+  final _dao = ImovelDao();
 
   @override
   void initState() {
@@ -29,7 +31,8 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadImoveis() async {
-    List<ImovelModel> loadedImoveis = await PrefsService.getImoveis();
+    //List<ImovelModel> loadedImoveis = await PrefsService.getImoveis();
+    List<ImovelModel> loadedImoveis = await _dao.lista();
     setState(() {
       imoveis = loadedImoveis;
     });
