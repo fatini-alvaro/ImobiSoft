@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
-class DatabaseProvider{
+class DatabaseProvider {
   static const _dbName = 'imobisoft.db';
   static const _dbVersion = 2;
 
@@ -10,25 +11,25 @@ class DatabaseProvider{
   Database? _database;
 
   Future<Database> get database async {
-    if(_database == null){
+    if (_database == null) {
       _database = await _initDatabase();
     }
 
     return _database!;
   }
 
-  Future<Database> _initDatabase() async{
+  Future<Database> _initDatabase() async {
     String databasePath = await getDatabasesPath();
-    String dbPath = '$databasePath/$_dbName';
+    String dbPath = join(databasePath, _dbName);
     return await openDatabase(
       dbPath,
       version: _dbVersion,
       onCreate: _onCreate,
-      onUpgrade: _onUpgrade
+      onUpgrade: _onUpgrade,
     );
   }
 
-  Future<void> _onCreate(Database db, int version) async{
+  Future<void> _onCreate(Database db, int version) async {
     await db.execute(
       '''
       CREATE TABLE IMOVEL (
@@ -39,28 +40,33 @@ class DatabaseProvider{
       );
       '''
     );
+    await db.execute(
+      '''
+      CREATE TABLE ANOTACAO (
+        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        DESCRICAO TEXT,
+        IMOVEL INTEGER
+      );
+      '''
+    );
   }
 
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async{
-
-    switch(oldVersion) {
-      case 1:
-        await db.execute(
-          '''
-          CREATE TABLE ANOTACAO (
-            ID INTEGER PRIMARY KEY AUTOINCREMENT,
-            DESCRICAO TEXT,
-            IMOVEL INTEGER
-          );
-          '''
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute(
+        '''
+        CREATE TABLE ANOTACAO (
+          ID INTEGER PRIMARY KEY AUTOINCREMENT,
+          DESCRICAO TEXT,
+          IMOVEL INTEGER
         );
-        break;
+        '''
+      );
     }
-
   }
 
-  Future<void> close() async{
-    if(_database != null){
+  Future<void> close() async {
+    if (_database != null) {
       await _database!.close();
     }
   }
