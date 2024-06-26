@@ -6,6 +6,7 @@ import 'package:trabalho_imobiliaria/dao/imovel_dao.dart';
 import 'package:trabalho_imobiliaria/model/imovel_model.dart';
 import 'package:trabalho_imobiliaria/services/prefs_service.dart';
 import 'package:trabalho_imobiliaria/utils/dialogs.dart';
+import 'package:trabalho_imobiliaria/view/gps/gps_page.dart';
 import 'package:trabalho_imobiliaria/view/imovel/cadastrar_imovel_page.dart';
 import 'package:trabalho_imobiliaria/widgets/custom_appbar_widget.dart';
 import 'package:trabalho_imobiliaria/widgets/custom_drawer_widget.dart';
@@ -65,6 +66,21 @@ class HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => CadastrarImovelPage(),
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 20),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: CustomAbrirTelaAdicionarNovoButtonComponent(
+                buttonText: 'Implementação GPS', 
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GpsPage(),
                     ),
                   );
                 },

@@ -14,8 +14,9 @@ dependencies:
   toast: ^0.3.0
   shared_preferences: ^2.2.2
   sqflite: ^2.3.3
-
   cupertino_icons: ^1.0.2
+  geolocator: ^11.0.0
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:
